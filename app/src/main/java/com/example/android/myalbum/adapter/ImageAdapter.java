@@ -3,6 +3,7 @@ package com.example.android.myalbum.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +21,11 @@ import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
+    private static final String TAG = "ImageAdapter";
+
     private LayoutInflater mInflater;
-//    private List<Bitmap> mDatas;
     private List<String> mDatas;
     private OnRecyclerViewItemListener mOnRecyclerViewItemListener;
-
-//    public ImageAdapter(Context context, List<Bitmap> mDatas) {
-//        mInflater = LayoutInflater.from(context);
-//        this.mDatas = mDatas;
-//    }
 
     public ImageAdapter(Context context, List<String> datas) {
         mInflater = LayoutInflater.from(context);
@@ -51,7 +48,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        holder.imageView.setImageBitmap(mDatas.get(position));
         ImageLoader.getInstance().displayImage(mDatas.get(position), holder.imageView);
     }
 

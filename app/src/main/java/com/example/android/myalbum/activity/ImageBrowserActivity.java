@@ -1,5 +1,6 @@
 package com.example.android.myalbum.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -8,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -31,8 +34,8 @@ public class ImageBrowserActivity extends AppCompatActivity {
     private static final String TAG = "ImageBrowserActivity";
 
     private RecyclerView mImageRecyclerView;
-//    private List<Bitmap> mDatas;
     private List<String> mDatas;
+    private ArrayList<String> mSelectedDatas;
     private ImageAdapter mAdapter;
 
     @Override
@@ -46,6 +49,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
         imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);
         imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
 
+        mSelectedDatas = new ArrayList<>();
         initImageDatas(list);
         configRecyclerView();
     }
@@ -55,9 +59,25 @@ public class ImageBrowserActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
-                return true;
+                break;
+            case R.id.confirm:
+                Intent intent = new Intent();
+                intent.putStringArrayListExtra("selected_images", mSelectedDatas);
+                Log.d(TAG, "onOptionsItemSelected: " + mSelectedDatas.toString());
+                setResult(0, intent);
+                finish();
+                break;
+            case R.id.cancel:
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navigation, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void addBackBarItem() {
@@ -78,11 +98,13 @@ public class ImageBrowserActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(ImageBrowserActivity.this, "click", Toast.LENGTH_SHORT).show();
+                mSelectedDatas.add(mDatas.get(position));
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 Toast.makeText(ImageBrowserActivity.this, "long click", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -90,34 +112,11 @@ public class ImageBrowserActivity extends AppCompatActivity {
     private void initImageDatas(final List<ImageInfo> list) {
         mDatas = new ArrayList<>(list.size());
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < list.size(); i++) {
             ImageInfo model = list.get(i);
             String imagePath = model.getPath();
-
-//            Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
             mDatas.add(imagePath);
         }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 20; i < list.size(); i++) {
-                    ImageInfo model = list.get(i);
-                    String imagePath = model.getPath();
-
-//                    Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
-                    mDatas.add(imagePath);
-                }
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();
     }
 
 }

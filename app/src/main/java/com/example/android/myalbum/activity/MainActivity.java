@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.android.myalbum.adapter.ImageAdapter;
 import com.example.android.myalbum.db.ImageDataSource;
@@ -23,9 +24,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int SELECT_IMAGE_CODE = 1000;
+
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
-//    private List<Bitmap> mDatas;
     private List<String> mDatas;
 
     @Override
@@ -33,17 +35,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        List<ImageInfo> list = new ArrayList<ImageInfo>();
+        List<ImageInfo> list = new ArrayList<>();
         ImageDataSource imageDataSource = new ImageDataSource(this);
         imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);
         imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
 
-        Log.d(TAG, "onCreate: list.size() = " + list.size());
-
         initImageDatas(list);
         initButton(R.id.select_image_btn);
         initRecyclerView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SELECT_IMAGE_CODE:
+                ArrayList<String> selectedIamges = data.getStringArrayListExtra("selected_images");
+                mAdapter = new ImageAdapter(this, selectedIamges);
+                mRecyclerView.setAdapter(mAdapter);
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initRecyclerView() {
@@ -63,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 9; i++) {
             ImageInfo model = list.get(i);
             String imagePath = model.getPath();
-
-//            Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 150, 150);
             mDatas.add(imagePath);
         }
     }
@@ -75,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ImageBrowserActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, SELECT_IMAGE_CODE);
             }
         });
     }

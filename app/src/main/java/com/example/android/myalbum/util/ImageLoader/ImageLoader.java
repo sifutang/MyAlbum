@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 
 public final class ImageLoader {
 
+    private static final String TAG = "ImageLoader";
+
     private static ImageLoader sInstance;
 
     private volatile ImageCache mImageCache = new MemoryCache();
