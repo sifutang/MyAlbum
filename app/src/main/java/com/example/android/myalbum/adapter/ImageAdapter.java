@@ -28,7 +28,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         this.mDatas = mDatas;
     }
 
-    public void setmOnRecyclerViewItemListener(OnRecyclerViewItemListener mOnRecyclerViewItemListener) {
+    public void setOnRecyclerViewItemListener(OnRecyclerViewItemListener mOnRecyclerViewItemListener) {
         this.mOnRecyclerViewItemListener = mOnRecyclerViewItemListener;
     }
 

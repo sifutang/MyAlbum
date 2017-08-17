@@ -18,9 +18,7 @@ public class ImageHelper {
         int originWidth = options.outWidth;
         int originHeight = options.outHeight;
 
-        /*
-        * Figure out how much to scale down by.
-        */
+        // Figure out how much to scale down by.
         int inSampleSize = 1;
         if (originHeight > heigth || originWidth > width) {
             float heightScale = originHeight / heigth;

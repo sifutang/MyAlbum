@@ -24,6 +24,7 @@ public class ImageDataSource {
         this.context = context;
     }
 
+
     public void getImagesFromAlbum(Uri uri, List<ImageInfo> list) {
         Cursor cursor = MediaStore.Images.Media.query(
                 context.getContentResolver(),

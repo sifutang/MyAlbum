@@ -38,7 +38,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_browser);
-
         addBackBarItem();
 
         List<ImageInfo> list = new ArrayList<>();
@@ -47,23 +46,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
         imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
 
         initImageDatas(list);
-
-        mImageRecyclerView = findViewById(R.id.recycler_view);
-        mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
-        mAdapter = new ImageAdapter(this, mDatas);
-        mImageRecyclerView.setAdapter(mAdapter);
-
-        mAdapter.setmOnRecyclerViewItemListener(new OnRecyclerViewItemListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(ImageBrowserActivity.this, "click", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                Toast.makeText(ImageBrowserActivity.this, "long click", Toast.LENGTH_SHORT).show();
-            }
-        });
+        configRecyclerView();
     }
 
     @Override
@@ -84,7 +67,26 @@ public class ImageBrowserActivity extends AppCompatActivity {
         }
     }
 
-    private void initImageDatas(List<ImageInfo> list) {
+    private void configRecyclerView() {
+        mImageRecyclerView = findViewById(R.id.recycler_view);
+        mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+        mAdapter = new ImageAdapter(this, mDatas);
+        mImageRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnRecyclerViewItemListener(new OnRecyclerViewItemListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(ImageBrowserActivity.this, "click", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Toast.makeText(ImageBrowserActivity.this, "long click", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initImageDatas(final List<ImageInfo> list) {
         mDatas = new ArrayList<>(list.size());
 
         for (int i = 0; i < 20; i++) {
@@ -94,5 +96,27 @@ public class ImageBrowserActivity extends AppCompatActivity {
             Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
             mDatas.add(bitmap);
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 20; i < list.size(); i++) {
+                    ImageInfo model = list.get(i);
+                    String imagePath = model.getPath();
+
+                    Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
+                    mDatas.add(bitmap);
+                }
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
+
 }
