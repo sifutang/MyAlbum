@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
-    private List<Bitmap> mDatas;
+//    private List<Bitmap> mDatas;
+    private List<String> mDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
             ImageInfo model = list.get(i);
             String imagePath = model.getPath();
 
-            Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 150, 150);
-            mDatas.add(bitmap);
+//            Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 150, 150);
+            mDatas.add(imagePath);
         }
     }
 

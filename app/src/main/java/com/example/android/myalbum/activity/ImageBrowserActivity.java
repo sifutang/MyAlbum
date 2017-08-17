@@ -31,7 +31,8 @@ public class ImageBrowserActivity extends AppCompatActivity {
     private static final String TAG = "ImageBrowserActivity";
 
     private RecyclerView mImageRecyclerView;
-    private List<Bitmap> mDatas;
+//    private List<Bitmap> mDatas;
+    private List<String> mDatas;
     private ImageAdapter mAdapter;
 
     @Override
@@ -93,8 +94,8 @@ public class ImageBrowserActivity extends AppCompatActivity {
             ImageInfo model = list.get(i);
             String imagePath = model.getPath();
 
-            Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
-            mDatas.add(bitmap);
+//            Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
+            mDatas.add(imagePath);
         }
 
         new Thread(new Runnable() {
@@ -104,8 +105,8 @@ public class ImageBrowserActivity extends AppCompatActivity {
                     ImageInfo model = list.get(i);
                     String imagePath = model.getPath();
 
-                    Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
-                    mDatas.add(bitmap);
+//                    Bitmap bitmap = ImageHelper.getThumbnail(imagePath, 100, 100);
+                    mDatas.add(imagePath);
                 }
 
 

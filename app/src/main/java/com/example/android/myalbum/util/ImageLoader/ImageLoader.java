@@ -20,7 +20,7 @@ public final class ImageLoader {
 
     // 线程池, 线程数量为CPU的个数
     ExecutorService mExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    
+
     private ImageLoader() { }
     public static ImageLoader getInstance() {
         if (sInstance == null) {

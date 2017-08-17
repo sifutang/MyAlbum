@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.android.myalbum.util.ImageLoader.ImageLoader;
 import com.example.android.myalbum.util.OnRecyclerViewItemListener;
 import com.example.android.myalbum.R;
 
@@ -20,12 +21,18 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
-    private List<Bitmap> mDatas;
+//    private List<Bitmap> mDatas;
+    private List<String> mDatas;
     private OnRecyclerViewItemListener mOnRecyclerViewItemListener;
 
-    public ImageAdapter(Context context, List<Bitmap> mDatas) {
+//    public ImageAdapter(Context context, List<Bitmap> mDatas) {
+//        mInflater = LayoutInflater.from(context);
+//        this.mDatas = mDatas;
+//    }
+
+    public ImageAdapter(Context context, List<String> datas) {
         mInflater = LayoutInflater.from(context);
-        this.mDatas = mDatas;
+        this.mDatas = datas;
     }
 
     public void setOnRecyclerViewItemListener(OnRecyclerViewItemListener mOnRecyclerViewItemListener) {
@@ -44,7 +51,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.imageView.setImageBitmap(mDatas.get(position));
+//        holder.imageView.setImageBitmap(mDatas.get(position));
+        ImageLoader.getInstance().displayImage(mDatas.get(position), holder.imageView);
     }
 
     @Override
