@@ -12,12 +12,27 @@ import java.util.concurrent.Executors;
  * Created by android on 17-8-17.
  */
 
-public class ImageLoader {
+public final class ImageLoader {
 
-    ImageCache mImageCache = new MemoryCache();
+    private static ImageLoader sInstance;
+
+    private volatile ImageCache mImageCache = new MemoryCache();
 
     // 线程池, 线程数量为CPU的个数
     ExecutorService mExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    
+    private ImageLoader() { }
+    public static ImageLoader getInstance() {
+        if (sInstance == null) {
+            synchronized (ImageLoader.class) {
+                if (sInstance == null) {
+                    sInstance = new ImageLoader();
+                }
+            }
+        }
+
+        return sInstance;
+    }
 
     public void setImageCache(ImageCache cache) {
         this.mImageCache = cache;
