@@ -1,7 +1,6 @@
 package com.example.android.myalbum.util.ImageLoader;
 
 import android.graphics.Bitmap;
-import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.util.concurrent.ExecutorService;
@@ -13,35 +12,35 @@ import java.util.concurrent.Executors;
 
 public class ImageLoader {
 
-    LruCache<String, Bitmap> mImageCache;
-
-    private Bitmap bitmap;
+    ImageCache mImageCache = new MemoryCache();
 
     // 线程池, 线程数量为CPU的个数
     ExecutorService mExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    public ImageLoader(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        initImageCache();
+    public ImageLoader(ImageCache mImageCache) {
+        this.mImageCache = mImageCache;
     }
 
-    private void initImageCache() {
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        final int cacheSize = maxMemory / 4;
-
-        mImageCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getRowBytes() * bitmap.getHeight() / 1024;
-            }
-        };
+    public void setImageCache(ImageCache cache) {
+        this.mImageCache = cache;
     }
 
     public void displayImage(final String url, final ImageView imageView) {
+        final Bitmap bitmap = mImageCache.get(url);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+            return;
+        }
+
+        submitLoadRequest(url, imageView);
+    }
+
+    private void submitLoadRequest(final String url, final ImageView imageView) {
         imageView.setTag(url);
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
+                Bitmap bitmap = pullImage(url);
                 if (imageView.getTag().equals(url)) {
                     imageView.setImageBitmap(bitmap);
                 }
@@ -49,5 +48,10 @@ public class ImageLoader {
                 mImageCache.put(url, bitmap);
             }
         });
+    }
+
+    private Bitmap pullImage(String url) {
+        // TODO: 17-8-17 bitmap from disk
+        return null;
     }
 }
