@@ -18,13 +18,28 @@ public class ImageHelper {
         int originWidth = options.outWidth;
         int originHeight = options.outHeight;
 
-        options.inSampleSize = originWidth / width;
-        options.inSampleSize = options.inSampleSize > originHeight / heigth ? options.inSampleSize : originHeight / heigth;
-        options.inJustDecodeBounds = false;
-        Bitmap decodeFile = BitmapFactory.decodeFile(path, options);
-        Bitmap result = Bitmap.createScaledBitmap(decodeFile, width, heigth, false);
-        decodeFile.recycle();
+        /*
+        * Figure out how much to scale down by.
+        */
+        int inSampleSize = 1;
+        if (originHeight > heigth || originWidth > width) {
+            float heightScale = originHeight / heigth;
+            float widthScale = originWidth / width;
 
-        return result;
+            inSampleSize = Math.round(heightScale > widthScale ? heightScale: widthScale);
+        }
+
+        options = new BitmapFactory.Options();
+        options.inSampleSize = inSampleSize;
+        options.inJustDecodeBounds = false;
+
+        // Read in and create final bitmap
+        return BitmapFactory.decodeFile(path, options);
+
+//        Bitmap decodeFile = BitmapFactory.decodeFile(path, options);
+//        Bitmap result = Bitmap.createScaledBitmap(decodeFile, width, heigth, false);
+//        decodeFile.recycle();
+//
+//        return result;
     }
 }
