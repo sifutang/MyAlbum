@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 
+import com.example.android.myalbum.util.CloseUtils;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,20 +25,15 @@ public class DiskCache implements ImageCache{
 
     @Override
     public void put(String url, Bitmap bitmap) {
+
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(cacheDir + url);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            CloseUtils.closeQuietly(fileOutputStream);
         }
     }
 }

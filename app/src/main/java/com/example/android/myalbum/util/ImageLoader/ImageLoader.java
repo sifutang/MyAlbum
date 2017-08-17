@@ -3,6 +3,8 @@ package com.example.android.myalbum.util.ImageLoader;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
+import com.example.android.myalbum.util.ImageHelper;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,10 +18,6 @@ public class ImageLoader {
 
     // 线程池, 线程数量为CPU的个数
     ExecutorService mExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-    public ImageLoader(ImageCache mImageCache) {
-        this.mImageCache = mImageCache;
-    }
 
     public void setImageCache(ImageCache cache) {
         this.mImageCache = cache;
@@ -51,7 +49,7 @@ public class ImageLoader {
     }
 
     private Bitmap pullImage(String url) {
-        // TODO: 17-8-17 bitmap from disk
-        return null;
+        Bitmap bitmap = ImageHelper.getThumbnail(url, 100, 100);
+        return bitmap;
     }
 }
