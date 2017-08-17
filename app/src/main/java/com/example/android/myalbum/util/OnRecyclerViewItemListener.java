@@ -1,4 +1,4 @@
-package com.example.android.myalbum;
+package com.example.android.myalbum.util;
 
 import android.view.View;
 

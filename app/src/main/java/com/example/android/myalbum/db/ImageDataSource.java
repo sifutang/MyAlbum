@@ -1,10 +1,12 @@
-package com.example.android.myalbum;
+package com.example.android.myalbum.db;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import com.example.android.myalbum.model.ImageInfo;
 
 import java.util.List;
 

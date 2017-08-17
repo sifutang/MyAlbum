@@ -1,4 +1,4 @@
-package com.example.android.myalbum;
+package com.example.android.myalbum.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,6 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.myalbum.adapter.ImageAdapter;
+import com.example.android.myalbum.db.ImageDataSource;
+import com.example.android.myalbum.util.OnRecyclerViewItemListener;
+import com.example.android.myalbum.R;
+import com.example.android.myalbum.model.ImageInfo;
 import com.example.android.myalbum.util.ImageHelper;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.android.myalbum;
+package com.example.android.myalbum.model;
 
 /**
  * Created by android on 17-8-16.
