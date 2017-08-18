@@ -36,4 +36,7 @@ public class MemoryCache implements ImageCache {
         };
     }
 
+    public boolean hasCache() {
+        return mMemoryCache.size() > 0;
+    }
 }

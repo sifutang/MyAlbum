@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 
 public final class ImageLoader {
 
+    // TODO: 17-8-17 使用Build模式进行重构, ImageLoader的配置选项需要提取出来
     private static final String TAG = "ImageLoader";
 
     private static ImageLoader sInstance;
@@ -65,6 +66,7 @@ public final class ImageLoader {
         });
     }
 
+    // TODO: 17-8-17 需要重构, 从磁盘加载和网络下载 
     private Bitmap pullImage(String url) {
         Bitmap bitmap = ImageHelper.getThumbnail(url, 100, 100);
         return bitmap;

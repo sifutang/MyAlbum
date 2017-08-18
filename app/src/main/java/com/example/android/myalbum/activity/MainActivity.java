@@ -49,9 +49,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SELECT_IMAGE_CODE:
-                ArrayList<String> selectedIamges = data.getStringArrayListExtra("selected_images");
-                mAdapter = new ImageAdapter(this, selectedIamges);
-                mRecyclerView.setAdapter(mAdapter);
+                if (data != null) {
+                    ArrayList<String> selectedIamges = data.getStringArrayListExtra("selected_images");
+                    mAdapter = new ImageAdapter(this, selectedIamges);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
         }
 
         super.onActivityResult(requestCode, resultCode, data);

@@ -12,13 +12,15 @@ public class ImageInfo {
     private String path;
     private String dispalyName;
 
-//    public ImageInfo(String title, String size, String desc, String path, String dispalyName) {
-//        this.title = title;
-//        this.size = size;
-//        this.desc = desc;
-//        this.path = path;
-//        this.dispalyName = dispalyName;
-//    }
+    public ImageInfo() { }
+
+    public ImageInfo(String title, String size, String desc, String path, String dispalyName) {
+        this.title = title;
+        this.size = size;
+        this.desc = desc;
+        this.path = path;
+        this.dispalyName = dispalyName;
+    }
 
     public String getTitle() {
         return title;
