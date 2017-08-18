@@ -51,7 +51,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageLoader.getInstance().displayImage(mDatas.get(position), holder.imageView);
-        holder.imageView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        holder.itemView.setBackgroundColor(Color.parseColor("#F5F5F5"));
     }
 
     @Override

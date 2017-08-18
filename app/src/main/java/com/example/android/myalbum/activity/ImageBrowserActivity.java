@@ -121,10 +121,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                // TODO: 17-8-18 需要重构,Activity不应该知道view的细节
-                ImageView imageView = (ImageView) view.findViewById(R.id.image_view);
-                imageView.setBackgroundColor(Color.DKGRAY);
-
+                view.setBackgroundColor(Color.DKGRAY);
                 mSelectedImagePathList.add(mImagePathList.get(position));
             }
         });
