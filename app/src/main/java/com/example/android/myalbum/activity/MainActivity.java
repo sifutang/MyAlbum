@@ -28,19 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
-    private List<String> mDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        List<ImageInfo> list = new ArrayList<>();
-        ImageDataSource imageDataSource = new ImageDataSource(this);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
-
-        initImageDatas(list);
         initButton(R.id.select_image_btn);
         initRecyclerView();
     }
@@ -61,23 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         mRecyclerView = findViewById(R.id.select_image_recycler);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        mAdapter = new ImageAdapter(this, mDatas);
-        mRecyclerView.setAdapter(mAdapter);
-    }
-
-    private void initImageDatas(List<ImageInfo> list) {
-        mDatas = new ArrayList<>(9);
-
-        for (int i = 0; i < 9; i++) {
-            ImageInfo model = list.get(i);
-            String imagePath = model.getPath();
-            mDatas.add(imagePath);
-        }
     }
 
     private void initButton(int resource_id) {
