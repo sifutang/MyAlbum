@@ -68,7 +68,9 @@ public final class ImageLoader {
 
     // TODO: 17-8-17 需要重构, 从磁盘加载和网络下载 
     private Bitmap pullImage(String url) {
-        Bitmap bitmap = ImageHelper.getThumbnail(url, 100, 100);
+//        Bitmap bitmap = ImageHelper.getThumbnail(url, 100, 100);
+//        Bitmap bitmap = ImageHelper.createImageThumbnail(url);
+        Bitmap bitmap = ImageHelper.getImageThumbnail(url, 100, 100);
         return bitmap;
     }
 }

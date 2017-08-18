@@ -1,6 +1,8 @@
 package com.example.android.myalbum.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -11,6 +13,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.android.myalbum.adapter.ImageAdapter;
 import com.example.android.myalbum.db.ImageDataSource;
@@ -59,6 +62,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.cancel:
+                mSelectedImagePathList.clear();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -112,13 +116,16 @@ public class ImageBrowserActivity extends AppCompatActivity {
         mAdapter.setOnRecyclerViewItemListener(new OnRecyclerViewItemListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mSelectedImagePathList.add(mImagePathList.get(position));
+
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
+                // TODO: 17-8-18 需要重构,Activity不应该知道view的细节
+                ImageView imageView = (ImageView) view.findViewById(R.id.image_view);
+                imageView.setBackgroundColor(Color.DKGRAY);
 
-                // TODO: 17-8-17 长按的时候, 选择图片
+                mSelectedImagePathList.add(mImagePathList.get(position));
             }
         });
     }

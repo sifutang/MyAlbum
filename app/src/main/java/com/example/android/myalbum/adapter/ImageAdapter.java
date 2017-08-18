@@ -1,7 +1,9 @@
 package com.example.android.myalbum.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +51,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageLoader.getInstance().displayImage(mDatas.get(position), holder.imageView);
+        holder.imageView.setBackgroundColor(Color.parseColor("#F5F5F5"));
     }
 
     @Override
