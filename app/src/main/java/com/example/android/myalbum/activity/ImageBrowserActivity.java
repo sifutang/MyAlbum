@@ -1,9 +1,9 @@
 package com.example.android.myalbum.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +30,7 @@ import java.util.List;
 public class ImageBrowserActivity extends AppCompatActivity {
 
     private static final String TAG = "ImageBrowserActivity";
+    public static final String SELECTED_IMAGES_KEY = "selected_images";
 
     private RecyclerView mImageRecyclerView;
     private List<String> mDatas;
@@ -40,11 +41,12 @@ public class ImageBrowserActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_browser);
-        addBackBarItem();
 
-        mSelectedDatas = new ArrayList<>();
+        addBackBarItem();
         initImageDatas();
         configRecyclerView();
+
+        mSelectedDatas = new ArrayList<>();
     }
 
     @Override
@@ -54,10 +56,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
                 this.finish();
                 break;
             case R.id.confirm:
-                Intent intent = new Intent();
-                intent.putStringArrayListExtra("selected_images", mSelectedDatas);
-                Log.d(TAG, "onOptionsItemSelected: " + mSelectedDatas.toString());
-                setResult(0, intent);
+                sendSelectedImageIntent();
                 finish();
                 break;
             case R.id.cancel:
@@ -66,6 +65,11 @@ public class ImageBrowserActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void sendSelectedImageIntent() {
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra(SELECTED_IMAGES_KEY, mSelectedDatas);
+        setResult(0, intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,6 +83,25 @@ public class ImageBrowserActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void initImageDatas() {
+        List<ImageInfo> list = getAllImagesFromDevice();
+        mDatas = new ArrayList<>(list.size());
+
+        for (int i = 0; i < list.size(); i++) {
+            ImageInfo model = list.get(i);
+            String imagePath = model.getPath();
+            mDatas.add(imagePath);
+        }
+    }
+
+    private List<ImageInfo> getAllImagesFromDevice() {
+        List<ImageInfo> list = new ArrayList<>();
+        ImageDataSource imageDataSource = new ImageDataSource(this);
+        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);
+        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
+        return list;
     }
 
     private void configRecyclerView() {
@@ -99,25 +122,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
                 // TODO: 17-8-17 长按的时候, 选择图片
             }
         });
-    }
-
-    private void initImageDatas() {
-        List<ImageInfo> list = getAllImagesFromDevice();
-        mDatas = new ArrayList<>(list.size());
-
-        for (int i = 0; i < list.size(); i++) {
-            ImageInfo model = list.get(i);
-            String imagePath = model.getPath();
-            mDatas.add(imagePath);
-        }
-    }
-
-    private List<ImageInfo> getAllImagesFromDevice() {
-        List<ImageInfo> list = new ArrayList<>();
-        ImageDataSource imageDataSource = new ImageDataSource(this);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
-        return list;
     }
 
 }

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int SELECT_IMAGE_CODE = 1000;
+    public static final String SELECTED_IMAGES_KEY = "selected_images";
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case SELECT_IMAGE_CODE:
                 if (data != null) {
-                    ArrayList<String> selectedIamges = data.getStringArrayListExtra("selected_images");
+                    ArrayList<String> selectedIamges = data.getStringArrayListExtra(SELECTED_IMAGES_KEY);
                     mAdapter = new ImageAdapter(this, selectedIamges);
                     mRecyclerView.setAdapter(mAdapter);
                 }
