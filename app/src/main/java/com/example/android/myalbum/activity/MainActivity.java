@@ -23,9 +23,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String SELECTED_IMAGES_KEY = "selected_images";
+
     private static final String TAG = "MainActivity";
     private static final int SELECT_IMAGE_CODE = 1000;
-    public static final String SELECTED_IMAGES_KEY = "selected_images";
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
