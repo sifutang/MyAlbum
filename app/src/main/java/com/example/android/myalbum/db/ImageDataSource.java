@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.android.myalbum.activity.ImageBrowserActivity;
 import com.example.android.myalbum.model.ImageInfo;
 
 import java.util.ArrayList;

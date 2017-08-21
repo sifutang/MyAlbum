@@ -45,7 +45,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
         setContentView(R.layout.image_browser);
 
         addBackBarItem();
-        initImageDatas();
+        initImageDatasViaAsync();
         configRecyclerView();
 
         mSelectedImagePathList = new ArrayList<>();
@@ -88,10 +88,49 @@ public class ImageBrowserActivity extends AppCompatActivity {
         }
     }
 
-    private void initImageDatas() {
-        List<ImageInfo> list = getAllImagesFromDevice();
-        mImagePathList = new ArrayList<>(list.size());
+    private void initImageDatasViaAsync() {
+        mImagePathList = new ArrayList<>();
 
+        ImageDataSource imageDataSource = new ImageDataSource(this);
+        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
+            @Override
+            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
+                initImageDatasCore(list);
+                initAdapter();
+            }
+        });
+
+        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
+            @Override
+            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
+                initImageDatasCore(list);
+                initAdapter();
+            }
+        });
+    }
+
+    private void initAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new ImageAdapter(ImageBrowserActivity.this, mImagePathList);
+            mImageRecyclerView.setAdapter(mAdapter);
+            mAdapter.setOnRecyclerViewItemListener(new OnRecyclerViewItemListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    view.setBackgroundColor(Color.DKGRAY);
+                    mSelectedImagePathList.add(mImagePathList.get(position));
+                }
+            });
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void initImageDatasCore(List<ImageInfo> list) {
         for (int i = 0; i < list.size(); i++) {
             ImageInfo model = list.get(i);
             String imagePath = model.getPath();
@@ -99,58 +138,9 @@ public class ImageBrowserActivity extends AppCompatActivity {
         }
     }
 
-    private void initImageDatasViaAsync() {
-        ImageDataSource imageDataSource = new ImageDataSource(this);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
-            @Override
-            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
-                for (int i = 0; i < list.size(); i++) {
-                    ImageInfo model = list.get(i);
-                    String imagePath = model.getPath();
-                    mImagePathList.add(imagePath);
-                }
-            }
-        });
-
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
-            @Override
-            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
-                for (int i = 0; i < list.size(); i++) {
-                    ImageInfo model = list.get(i);
-                    String imagePath = model.getPath();
-                    mImagePathList.add(imagePath);
-                }
-            }
-        });
-    }
-
-    private List<ImageInfo> getAllImagesFromDevice() {
-        // TODO: 17-8-18 异步重新处理
-        List<ImageInfo> list = new ArrayList<>();
-        ImageDataSource imageDataSource = new ImageDataSource(this);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, list);
-        return list;
-    }
-
     private void configRecyclerView() {
         mImageRecyclerView = findViewById(R.id.recycler_view);
         mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        mAdapter = new ImageAdapter(this, mImagePathList);
-        mImageRecyclerView.setAdapter(mAdapter);
-
-        mAdapter.setOnRecyclerViewItemListener(new OnRecyclerViewItemListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                view.setBackgroundColor(Color.DKGRAY);
-                mSelectedImagePathList.add(mImagePathList.get(position));
-            }
-        });
     }
 
 }
