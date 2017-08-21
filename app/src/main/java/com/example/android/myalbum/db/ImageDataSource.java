@@ -1,8 +1,11 @@
 package com.example.android.myalbum.db;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -27,6 +30,10 @@ public class ImageDataSource {
     }
 
     public void getImagesFromAlbum(Uri uri, List<ImageInfo> list) {
+        fetchImageDatasCore(uri, list);
+    }
+
+    private void fetchImageDatasCore(Uri uri, List<ImageInfo> list) {
         Cursor cursor = MediaStore.Images.Media.query(
                 context.getContentResolver(),
                 uri,
@@ -58,9 +65,12 @@ public class ImageDataSource {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<ImageInfo> list = new ArrayList<>();
-                getImagesFromAlbum(uri, list);
-                fetchDataHandler.onFetchDataSuccessHandler(list);
+                synchronized (ImageDataSource.class) {
+                    List<ImageInfo> list = new ArrayList<>();
+                    getImagesFromAlbum(uri, list);
+
+                    fetchDataHandler.onFetchDataSuccessHandler(list);
+                }
             }
         }).start();
     }
