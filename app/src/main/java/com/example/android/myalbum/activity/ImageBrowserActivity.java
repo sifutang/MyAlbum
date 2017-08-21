@@ -100,6 +100,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
     }
 
     private List<ImageInfo> getAllImagesFromDevice() {
+        // TODO: 17-8-18 异步重新处理
         List<ImageInfo> list = new ArrayList<>();
         ImageDataSource imageDataSource = new ImageDataSource(this);
         imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, list);

@@ -51,4 +51,11 @@ public class ImageDataSource {
             }
         }
     }
+
+
+    public interface FetchDataHandler {
+
+        void onFetchDataSuccessHandler();
+        void onFetchDataFailedHandler();
+    }
 }

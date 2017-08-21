@@ -23,7 +23,6 @@ public class ImageHelper {
         int originWidth = options.outWidth;
         int originHeight = options.outHeight;
 
-        // Figure out how much to scale down by.
         int inSampleSize = 1;
         if (originHeight > heigth || originWidth > width) {
             float heightScale = originHeight / heigth;
@@ -32,12 +31,10 @@ public class ImageHelper {
             inSampleSize = Math.round(heightScale > widthScale ? heightScale: widthScale);
         }
 
-        Log.d(TAG, "getThumbnail: " + inSampleSize);
         options = new BitmapFactory.Options();
         options.inSampleSize = inSampleSize;
         options.inJustDecodeBounds = false;
 
-        // Read in and create final bitmap
         return BitmapFactory.decodeFile(path, options);
     }
 
@@ -71,8 +68,6 @@ public class ImageHelper {
 
         options.inSampleSize = computeSampleSize(options, -1, 128 * 128);
         options.inJustDecodeBounds = false;
-
-        Log.d(TAG, "getThumbnail: " + options.inSampleSize);
 
         Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
         return bitmap;
