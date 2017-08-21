@@ -99,6 +99,31 @@ public class ImageBrowserActivity extends AppCompatActivity {
         }
     }
 
+    private void initImageDatasViaAsync() {
+        ImageDataSource imageDataSource = new ImageDataSource(this);
+        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
+            @Override
+            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
+                for (int i = 0; i < list.size(); i++) {
+                    ImageInfo model = list.get(i);
+                    String imagePath = model.getPath();
+                    mImagePathList.add(imagePath);
+                }
+            }
+        });
+
+        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
+            @Override
+            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
+                for (int i = 0; i < list.size(); i++) {
+                    ImageInfo model = list.get(i);
+                    String imagePath = model.getPath();
+                    mImagePathList.add(imagePath);
+                }
+            }
+        });
+    }
+
     private List<ImageInfo> getAllImagesFromDevice() {
         // TODO: 17-8-18 异步重新处理
         List<ImageInfo> list = new ArrayList<>();

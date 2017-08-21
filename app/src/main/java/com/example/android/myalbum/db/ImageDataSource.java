@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.android.myalbum.model.ImageInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,10 +53,21 @@ public class ImageDataSource {
         }
     }
 
+    public void getImagesFromAlbum(final Uri uri, final FetchDataHandler fetchDataHandler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<ImageInfo> list = new ArrayList<>();
+                getImagesFromAlbum(uri, list);
+                fetchDataHandler.onFetchDataSuccessHandler(list);
+            }
+        }).start();
+    }
+
 
     public interface FetchDataHandler {
 
-        void onFetchDataSuccessHandler();
-        void onFetchDataFailedHandler();
+        void onFetchDataSuccessHandler(List<ImageInfo> list);
+//        void onFetchDataFailedHandler();
     }
 }
