@@ -39,17 +39,21 @@ public class ImageDataSource {
         );
 
         if (cursor != null) {
-            while (cursor.moveToNext()) {
-                ImageInfo model = new ImageInfo();
-                model.setTitle(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE)));
-                model.setPath(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
-                model.setSize(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE)));
-                model.setDesc(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DESCRIPTION)));
-                model.setDispalyName(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)));
-                list.add(model);
+           try {
+               while (cursor.moveToNext()) {
+                   ImageInfo model = new ImageInfo();
+                   model.setTitle(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE)));
+                   model.setPath(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                   model.setSize(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE)));
+                   model.setDesc(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DESCRIPTION)));
+                   model.setDispalyName(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)));
+                   list.add(model);
 
-                Log.d(TAG, "getImagesFromAlbum: " + model.toString());
-            }
+                   Log.d(TAG, "getImagesFromAlbum: " + model.toString());
+               }
+           } finally {
+               cursor.close();
+           }
         }
     }
 
