@@ -21,8 +21,8 @@ public final class ImageLoader {
 
     private volatile ImageCache mImageCache = new MemoryCache();
 
-    // 线程池, 线程数量为CPU的个数
-    ExecutorService mExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private ExecutorService mExecutorService =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private ImageLoader() { }
     public static ImageLoader getInstance() {
@@ -66,11 +66,10 @@ public final class ImageLoader {
         });
     }
 
-    // TODO: 17-8-17 需要重构, 从磁盘加载和网络下载 
+    // TODO: 17-8-17 需要重构, 从磁盘加载或者网络下载
     private Bitmap pullImage(String url) {
-//        Bitmap bitmap = ImageHelper.getThumbnail(url, 100, 100);
-//        Bitmap bitmap = ImageHelper.createImageThumbnail(url);
-        Bitmap bitmap = ImageHelper.getImageThumbnail(url, 100, 100);
-        return bitmap;
+//        return  ImageHelper.getThumbnail(url, 100, 100);
+//        return  ImageHelper.createImageThumbnail(url);
+         return ImageHelper.getImageThumbnail(url, 100, 100);
     }
 }

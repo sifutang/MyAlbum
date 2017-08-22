@@ -3,9 +3,6 @@ package com.example.android.myalbum.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
-import android.util.Log;
-import android.view.WindowManager;
-
 /**
  * Created by android on 17-8-17.
  */
@@ -69,8 +66,7 @@ public class ImageHelper {
         options.inSampleSize = computeSampleSize(options, -1, 128 * 128);
         options.inJustDecodeBounds = false;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
-        return bitmap;
+        return  BitmapFactory.decodeFile(filePath, options);
     }
 
     private static int computeSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
@@ -96,7 +92,6 @@ public class ImageHelper {
         int upperBound = (minSideLength == -1) ? 128 : (int) Math.min(Math.floor(width / minSideLength), Math.floor(height / minSideLength));
 
         if (upperBound < lowerBound) {
-            // return the larger one when there is no overlapping zone.
             return lowerBound;
         }
 

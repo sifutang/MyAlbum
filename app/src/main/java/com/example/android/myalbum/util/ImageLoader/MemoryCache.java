@@ -27,7 +27,7 @@ public class MemoryCache implements ImageCache {
 
     private void initImageCache() {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory()) / 1024;
-        final int cacheSize = maxMemory / 4;
+        final int cacheSize = maxMemory / 8;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
