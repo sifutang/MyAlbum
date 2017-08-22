@@ -3,6 +3,7 @@ package com.example.android.myalbum.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -19,10 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.android.myalbum.adapter.ImageAdapter;
-import com.example.android.myalbum.db.ImageDataSource;
 import com.example.android.myalbum.util.OnRecyclerViewItemListener;
 import com.example.android.myalbum.R;
-import com.example.android.myalbum.model.ImageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +33,21 @@ import java.util.List;
  * Created by android on 17-8-17.
  */
 
-public class ImageBrowserActivity extends AppCompatActivity {
+public class ImageBrowserActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "ImageBrowserActivity";
 
     private static final String SELECTED_IMAGES_KEY = "selected_images";
+    public static final int IMAGE_LOADER_EXTERNAL_ID = 0;
+    public static final int IMAGE_LOADER_INTERNAL_ID = 1;
 
     private RecyclerView mImageRecyclerView;
+
     private List<String> mImagePathList;
     private ArrayList<String> mSelectedImagePathList;
     private ImageAdapter mAdapter;
+    private CursorLoader mCursorLoaderExternal;
+    private CursorLoader mCursorLoaderInternal;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,10 +56,14 @@ public class ImageBrowserActivity extends AppCompatActivity {
 
         checkReadExternalStoragePermission();
 
-        initImageDatasViaAsync();
         configRecyclerView();
 
         mSelectedImagePathList = new ArrayList<>();
+        mImagePathList = new ArrayList<>();
+
+        LoaderManager manager = getSupportLoaderManager();
+        manager.initLoader(IMAGE_LOADER_EXTERNAL_ID, null, this);
+        manager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
     }
 
     private void checkReadExternalStoragePermission() {
@@ -106,40 +117,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void initImageDatasViaAsync() {
-        mImagePathList = new ArrayList<>();
-
-        ImageDataSource imageDataSource = new ImageDataSource(this);
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
-            @Override
-            public void onFetchDataSuccessHandler(final List<ImageInfo> list) {
-
-                initImageDatasCore(list);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initAdapter();
-                    }
-                });
-            }
-        });
-
-        imageDataSource.getImagesFromAlbum(MediaStore.Images.Media.INTERNAL_CONTENT_URI, new ImageDataSource.FetchDataHandler() {
-            @Override
-            public void onFetchDataSuccessHandler(List<ImageInfo> list) {
-                initImageDatasCore(list);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initAdapter();
-                    }
-                });
-            }
-        });
-    }
-
     private void initAdapter() {
         if (mAdapter == null) {
             mAdapter = new ImageAdapter(ImageBrowserActivity.this, mImagePathList);
@@ -161,17 +138,50 @@ public class ImageBrowserActivity extends AppCompatActivity {
         }
     }
 
-    private void initImageDatasCore(List<ImageInfo> list) {
-        for (int i = 0; i < list.size(); i++) {
-            ImageInfo model = list.get(i);
-            String imagePath = model.getPath();
-            mImagePathList.add(imagePath);
-        }
-    }
-
     private void configRecyclerView() {
         mImageRecyclerView = findViewById(R.id.recycler_view);
         mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case IMAGE_LOADER_EXTERNAL_ID:
+                mCursorLoaderExternal = new CursorLoader(getApplicationContext(),
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+                return mCursorLoaderExternal;
+
+            case IMAGE_LOADER_INTERNAL_ID:
+                mCursorLoaderInternal = new CursorLoader(getApplicationContext(),
+                        MediaStore.Images.Media.INTERNAL_CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+                return mCursorLoaderInternal;
+        }
+
+        return null;
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        while (data.moveToNext()) {
+            String imagePath = data.getString(data.getColumnIndex(MediaStore.Images.Media.DATA));
+            mImagePathList.add(imagePath);
+            Log.d(TAG, "getImagesFromAlbum: " + imagePath);
+        }
+
+        initAdapter();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset: ");
+    }
 }
