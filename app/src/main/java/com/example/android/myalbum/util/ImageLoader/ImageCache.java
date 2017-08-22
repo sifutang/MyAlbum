@@ -1,8 +1,6 @@
 package com.example.android.myalbum.util.ImageLoader;
 
 import android.graphics.Bitmap;
-import android.util.LruCache;
-
 /**
  * Created by android on 17-8-17.
  */

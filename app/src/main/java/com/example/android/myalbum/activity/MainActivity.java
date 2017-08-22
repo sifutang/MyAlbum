@@ -1,35 +1,26 @@
 package com.example.android.myalbum.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.android.myalbum.adapter.ImageAdapter;
-import com.example.android.myalbum.db.ImageDataSource;
 import com.example.android.myalbum.R;
-import com.example.android.myalbum.model.ImageInfo;
-import com.example.android.myalbum.util.ImageHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String SELECTED_IMAGES_KEY = "selected_images";
-
     private static final String TAG = "MainActivity";
+
+    private static final String SELECTED_IMAGES_KEY = "selected_images";
     private static final int SELECT_IMAGE_CODE = 1000;
 
     private RecyclerView mRecyclerView;
-    private ImageAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             case SELECT_IMAGE_CODE:
                 if (data != null) {
                     ArrayList<String> selectedIamges = data.getStringArrayListExtra(SELECTED_IMAGES_KEY);
-                    mAdapter = new ImageAdapter(this, selectedIamges);
+                    ImageAdapter mAdapter = new ImageAdapter(this, selectedIamges);
                     mRecyclerView.setAdapter(mAdapter);
                 }
         }

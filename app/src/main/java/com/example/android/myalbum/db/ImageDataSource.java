@@ -1,15 +1,11 @@
 package com.example.android.myalbum.db;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.example.android.myalbum.activity.ImageBrowserActivity;
 import com.example.android.myalbum.model.ImageInfo;
 
 import java.util.ArrayList;
@@ -30,10 +26,6 @@ public class ImageDataSource {
     }
 
     public void getImagesFromAlbum(Uri uri, List<ImageInfo> list) {
-        fetchImageDatasCore(uri, list);
-    }
-
-    private void fetchImageDatasCore(Uri uri, List<ImageInfo> list) {
         Cursor cursor = MediaStore.Images.Media.query(
                 context.getContentResolver(),
                 uri,
@@ -56,7 +48,7 @@ public class ImageDataSource {
                 model.setDispalyName(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)));
                 list.add(model);
 
-                Log.d(TAG, "getImagesFromAlbum: " + model);
+                Log.d(TAG, "getImagesFromAlbum: " + model.toString());
             }
         }
     }

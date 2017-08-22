@@ -1,7 +1,6 @@
 package com.example.android.myalbum.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -19,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.example.android.myalbum.adapter.ImageAdapter;
 import com.example.android.myalbum.db.ImageDataSource;
@@ -36,9 +33,9 @@ import java.util.List;
 
 public class ImageBrowserActivity extends AppCompatActivity {
 
-    public static final String SELECTED_IMAGES_KEY = "selected_images";
-
     private static final String TAG = "ImageBrowserActivity";
+
+    private static final String SELECTED_IMAGES_KEY = "selected_images";
 
     private RecyclerView mImageRecyclerView;
     private List<String> mImagePathList;
@@ -49,7 +46,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_browser);
-        addBackBarItem();
 
         checkReadExternalStoragePermission();
 
@@ -87,9 +83,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                break;
             case R.id.confirm:
                 sendSelectedImageIntent();
                 finish();
@@ -113,14 +106,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void addBackBarItem() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     private void initImageDatasViaAsync() {
         mImagePathList = new ArrayList<>();
 
@@ -134,7 +119,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "onFetchDataSuccessHandler: current thread:" + Thread.currentThread().getName());
                         initAdapter();
                     }
                 });
@@ -149,7 +133,6 @@ public class ImageBrowserActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "onFetchDataSuccessHandler: current thread:" + Thread.currentThread().getName());
                         initAdapter();
                     }
                 });
@@ -174,9 +157,7 @@ public class ImageBrowserActivity extends AppCompatActivity {
                 }
             });
         } else {
-//            if (mImageRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE || mImageRecyclerView.isComputingLayout() == false) {
                 mAdapter.notifyDataSetChanged();
-//            }
         }
     }
 
