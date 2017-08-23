@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initButton(R.id.select_image_btn);
+        initButton();
         initRecyclerView();
     }
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    private void initButton(int resource_id) {
+    private void initButton() {
         Button selectImageBtn = findViewById(R.id.select_image_btn);
         selectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
