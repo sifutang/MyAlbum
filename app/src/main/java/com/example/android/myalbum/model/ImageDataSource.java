@@ -9,6 +9,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
+import com.example.android.myalbum.util.FetchDataListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,6 @@ import java.util.List;
 public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "ImageDataSource";
-
-    public interface FetchDataListener {
-        void fetchDataSourceSuccess(List<String> list);
-    }
 
     private static final int IMAGE_LOADER_EXTERNAL_ID = 0;
     private static final int IMAGE_LOADER_INTERNAL_ID = 1;

@@ -1,20 +1,14 @@
 package com.example.android.myalbum.presenter;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.example.android.myalbum.activity.ImageBrowserActivity;
 import com.example.android.myalbum.adapter.ImageAdapter;
 import com.example.android.myalbum.model.ImageDataSource;
+import com.example.android.myalbum.util.FetchDataListener;
 import com.example.android.myalbum.util.OnRecyclerViewItemListener;
 
 import java.util.ArrayList;
@@ -59,7 +53,7 @@ public class ImageBrowserPresenter {
 
     public void updateUI() {
         ImageDataSource dataSource = new ImageDataSource(mContext.getSupportLoaderManager(), mContext);
-        dataSource.setListener(new ImageDataSource.FetchDataListener() {
+        dataSource.setListener(new FetchDataListener() {
             @Override
             public void fetchDataSourceSuccess(List<String> list) {
                 configAdapter(mContext.getImageRecyclerView(), list);
