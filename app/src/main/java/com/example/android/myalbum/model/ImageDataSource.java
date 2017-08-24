@@ -41,6 +41,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         mLoaderManager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
     }
 
+
     public void setListener(FetchDataListener listener) {
         mListener = listener;
     }
@@ -72,6 +73,15 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        processCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset: ");
+    }
+
+    private void processCursor(Cursor data) {
         data.moveToFirst(); // 屏幕旋转的时候, 游标需要重新指向第一条, 因为loader并没有随activity重建
         while (data.moveToNext()) {
             String imagePath = data.getString(data.getColumnIndex(MediaStore.Images.Media.DATA));
@@ -81,10 +91,5 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         if (mListener != null) {
             mListener.fetchDataSourceSuccess(mDates);
         }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "onLoaderReset: ");
     }
 }

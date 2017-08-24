@@ -1,8 +1,6 @@
 package com.example.android.myalbum.util;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
-import android.util.Log;
 
 /**
  * Created by android on 17-8-24.
