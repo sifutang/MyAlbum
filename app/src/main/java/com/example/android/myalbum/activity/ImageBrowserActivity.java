@@ -10,11 +10,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.myalbum.presenter.ImageBrowserPresenter;
 import com.example.android.myalbum.R;
+import com.example.android.myalbum.util.ScreenSizeHelper;
 
 /**
  * Created by android on 17-8-17.
@@ -41,6 +43,10 @@ public class ImageBrowserActivity extends AppCompatActivity {
         configRecyclerView();
         mImageBrowserPresenter = new ImageBrowserPresenter(this);
         mImageBrowserPresenter.updateUI();
+
+        Log.d(TAG, "onCreate: width " + ScreenSizeHelper.getScreenWidthDip(this));
+        Log.d(TAG, "onCreate: height " + ScreenSizeHelper.getScreenHeigthDip(this));
+
     }
 
     private void checkReadExternalStoragePermission() {

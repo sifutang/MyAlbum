@@ -72,6 +72,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        data.moveToFirst();
         while (data.moveToNext()) {
             String imagePath = data.getString(data.getColumnIndex(MediaStore.Images.Media.DATA));
             mDates.add(imagePath);
