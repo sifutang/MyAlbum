@@ -72,7 +72,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        data.moveToFirst();
+        data.moveToFirst(); // 屏幕旋转的时候, 游标需要重新指向第一条, 因为loader并没有随activity重建
         while (data.moveToNext()) {
             String imagePath = data.getString(data.getColumnIndex(MediaStore.Images.Media.DATA));
             mDates.add(imagePath);
