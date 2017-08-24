@@ -1,6 +1,7 @@
 package com.example.android.myalbum.util.ImageLoader;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.android.myalbum.util.ImageHelper;
@@ -45,6 +46,7 @@ public final class ImageLoader {
         final Bitmap bitmap = mImageCache.get(url);
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
+            Log.d(TAG, "displayImage: ");
             return;
         }
 
@@ -58,6 +60,7 @@ public final class ImageLoader {
             public void run() {
                 Bitmap bitmap = pullImage(url);
                 if (imageView.getTag().equals(url)) {
+                    Log.d(TAG, "run: submitLoadRequest");
                     imageView.setImageBitmap(bitmap);
                 }
 
