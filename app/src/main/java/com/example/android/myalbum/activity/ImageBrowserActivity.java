@@ -1,47 +1,44 @@
 package com.example.android.myalbum.activity;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.android.myalbum.IImageBrowserView;
 import com.example.android.myalbum.ImageBrowserPresenter;
-import com.example.android.myalbum.adapter.ImageAdapter;
-import com.example.android.myalbum.util.OnRecyclerViewItemListener;
 import com.example.android.myalbum.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.android.myalbum.adapter.ImageAdapter;
 
 /**
  * Created by android on 17-8-17.
  */
 
-public class ImageBrowserActivity extends AppCompatActivity implements IImageBrowserView {
+public class ImageBrowserActivity extends AppCompatActivity {
 
     private static final String TAG = "ImageBrowserActivity";
 
     private RecyclerView mImageRecyclerView;
 
-    private ImageBrowserPresenter mImageBrowserPresenter = new ImageBrowserPresenter(this);
+    private ImageBrowserPresenter mImageBrowserPresenter;
+    private ImageAdapter mAdapter;
+
+    public RecyclerView getImageRecyclerView() {
+        return mImageRecyclerView;
+    }
+
+    public LoaderManager requestLoaderManager() {
+        return getSupportLoaderManager();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +46,8 @@ public class ImageBrowserActivity extends AppCompatActivity implements IImageBro
         setContentView(R.layout.image_browser);
 
         checkReadExternalStoragePermission();
+
+        mImageBrowserPresenter = new ImageBrowserPresenter(this);
 
         configRecyclerView();
     }
@@ -100,6 +99,5 @@ public class ImageBrowserActivity extends AppCompatActivity implements IImageBro
     private void configRecyclerView() {
         mImageRecyclerView = findViewById(R.id.recycler_view);
         mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        mImageBrowserPresenter.configAdapter(mImageRecyclerView);
     }
 }

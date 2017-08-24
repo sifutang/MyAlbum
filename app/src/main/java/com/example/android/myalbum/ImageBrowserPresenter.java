@@ -28,24 +28,26 @@ public class ImageBrowserPresenter  implements LoaderManager.LoaderCallbacks<Cur
     private static final String TAG = "ImageBrowserPresenter";
 
     private static final String SELECTED_IMAGES_KEY = "selected_images";
-    public static final int IMAGE_LOADER_EXTERNAL_ID = 0;
-    public static final int IMAGE_LOADER_INTERNAL_ID = 1;
+    private static final int IMAGE_LOADER_EXTERNAL_ID = 0;
+    private static final int IMAGE_LOADER_INTERNAL_ID = 1;
 
-
-    private final ImageBrowserActivity mImageBrowserView;
+    private ImageBrowserActivity mContext;
     private ImageAdapter mAdapter;
-    private ArrayList<String> mSelectedImagePathList;
     private List<String> mImagePathList;
+    private ArrayList<String> mSelectedImagePathList;
+    private List<View> mSelectedViews;
 
     private CursorLoader mCursorLoaderExternal;
     private CursorLoader mCursorLoaderInternal;
 
-    public ImageBrowserPresenter(ImageBrowserActivity imageBrowserView) {
-        this.mImageBrowserView = imageBrowserView;
+    public ImageBrowserPresenter(ImageBrowserActivity context) {
+        this.mContext = context;
+
         this.mSelectedImagePathList = new ArrayList<>();
         this.mImagePathList = new ArrayList<>();
+        this.mSelectedViews = new ArrayList<>();
 
-        LoaderManager manager = this.mImageBrowserView.getSupportLoaderManager();
+        LoaderManager manager = mContext.requestLoaderManager();
         manager.initLoader(IMAGE_LOADER_EXTERNAL_ID, null, this);
         manager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
     }
@@ -53,21 +55,21 @@ public class ImageBrowserPresenter  implements LoaderManager.LoaderCallbacks<Cur
     public void selectImages() {
         Intent intent = new Intent();
         intent.putStringArrayListExtra(SELECTED_IMAGES_KEY, mSelectedImagePathList);
-        mImageBrowserView.setResult(0, intent);
-        mImageBrowserView.finish();
+        mContext.setResult(0, intent);
+        mContext.finish();
     }
 
     public void cancle() {
         mSelectedImagePathList.clear();
+        for (View view : mSelectedViews) {
+            view.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        }
     }
 
-    public void loadImages() {
 
-    }
-
-    public void configAdapter(RecyclerView recyclerView) {
+    private void configAdapter(RecyclerView recyclerView) {
         if (mAdapter == null) {
-            mAdapter = new ImageAdapter(mImageBrowserView, mImagePathList);
+            mAdapter = new ImageAdapter(mContext, mImagePathList);
             recyclerView.setAdapter(mAdapter);
             mAdapter.setOnRecyclerViewItemListener(new OnRecyclerViewItemListener() {
                 @Override
@@ -77,6 +79,7 @@ public class ImageBrowserPresenter  implements LoaderManager.LoaderCallbacks<Cur
                 @Override
                 public void onItemLongClick(View view, int position) {
                     view.setBackgroundColor(Color.DKGRAY);
+                    mSelectedViews.add(view);
                     mSelectedImagePathList.add(mImagePathList.get(position));
                 }
             });
@@ -85,11 +88,12 @@ public class ImageBrowserPresenter  implements LoaderManager.LoaderCallbacks<Cur
         }
     }
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case IMAGE_LOADER_EXTERNAL_ID:
-                mCursorLoaderExternal = new CursorLoader(mImageBrowserView.getApplicationContext(),
+                mCursorLoaderExternal = new CursorLoader(mContext.getApplicationContext(),
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         null,
                         null,
@@ -98,7 +102,7 @@ public class ImageBrowserPresenter  implements LoaderManager.LoaderCallbacks<Cur
                 return mCursorLoaderExternal;
 
             case IMAGE_LOADER_INTERNAL_ID:
-                mCursorLoaderInternal = new CursorLoader(mImageBrowserView.getApplicationContext(),
+                mCursorLoaderInternal = new CursorLoader(mContext.getApplicationContext(),
                         MediaStore.Images.Media.INTERNAL_CONTENT_URI,
                         null,
                         null,
@@ -118,8 +122,7 @@ public class ImageBrowserPresenter  implements LoaderManager.LoaderCallbacks<Cur
             mImagePathList.add(imagePath);
         }
 
-        // TODO: 17-8-23 adapter
-//        configAdapter();
+        configAdapter(mContext.getImageRecyclerView());
     }
 
     @Override
