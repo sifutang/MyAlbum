@@ -25,12 +25,11 @@ import com.example.android.myalbum.adapter.ImageAdapter;
 
 public class ImageBrowserActivity extends AppCompatActivity {
 
+    public static final int REQUEST_READ_EXTERNAL_STORAGE = 0;
+
     private static final String TAG = "ImageBrowserActivity";
-
     private RecyclerView mImageRecyclerView;
-
     private ImageBrowserPresenter mImageBrowserPresenter;
-    private ImageAdapter mAdapter;
 
     public RecyclerView getImageRecyclerView() {
         return mImageRecyclerView;
@@ -55,26 +54,22 @@ public class ImageBrowserActivity extends AppCompatActivity {
     private void checkReadExternalStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                Log.d(TAG, "getImagesFromAlbum: READ permission is not granted");
-                requestPermissions(new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, 0);
+                requestPermissions(new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, REQUEST_READ_EXTERNAL_STORAGE);
             } else {
-
+                //
             }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 0:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "onRequestPermissionsResult: success");
-                } else {
-                    Log.d(TAG, "onRequestPermissionsResult: no permission");
-                }
+        if (requestCode == REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults.length != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                // request permission failed
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
