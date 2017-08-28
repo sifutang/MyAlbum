@@ -38,7 +38,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         mDates = new ArrayList<>();
 
         mLoaderManager.initLoader(IMAGE_LOADER_EXTERNAL_ID, null, this);
-        mLoaderManager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
+//        mLoaderManager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
     }
 
 

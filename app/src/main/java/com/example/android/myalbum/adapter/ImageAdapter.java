@@ -3,6 +3,7 @@ package com.example.android.myalbum.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     private List<String> mDatas;
     private OnRecyclerViewItemListener mOnRecyclerViewItemListener;
 
+    public ImageAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+    }
+
     public ImageAdapter(Context context, List<String> datas) {
         mInflater = LayoutInflater.from(context);
         this.mDatas = datas;
+    }
+
+    public void setDatas(List<String> datas) {
+        mDatas = datas;
     }
 
     public void setOnRecyclerViewItemListener(OnRecyclerViewItemListener mOnRecyclerViewItemListener) {

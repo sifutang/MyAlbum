@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         selectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ImageBrowserActivity.class);
+                Intent intent = new Intent(MainActivity.this, ImageBrowserView.class);
                 startActivityForResult(intent, SELECT_IMAGE_CODE);
             }
         });

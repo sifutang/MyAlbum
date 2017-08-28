@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ImageBrowserActivity"
+        <activity android:name=".activity.ImageBrowserView"
             android:parentActivityName=".activity.MainActivity">
         </activity>
 
