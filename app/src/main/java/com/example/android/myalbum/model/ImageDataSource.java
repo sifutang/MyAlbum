@@ -9,6 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
+import com.example.android.myalbum.Interface.IAlbumModel;
 import com.example.android.myalbum.util.FetchDataListener;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by android on 17-8-24.
  */
 
-public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor>, IAlbumModel {
 
     private static final String TAG = "ImageDataSource";
 
@@ -36,11 +37,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         mLoaderManager = loaderManager;
         mContext = context;
         mDates = new ArrayList<>();
-
-        mLoaderManager.initLoader(IMAGE_LOADER_EXTERNAL_ID, null, this);
-//        mLoaderManager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
     }
-
 
     public void setListener(FetchDataListener listener) {
         mListener = listener;
@@ -91,5 +88,11 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         if (mListener != null) {
             mListener.fetchDataSourceSuccess(mDates);
         }
+    }
+
+    @Override
+    public void loadAlbumFromLocal() {
+        mLoaderManager.initLoader(IMAGE_LOADER_EXTERNAL_ID, null, this);
+        mLoaderManager.initLoader(IMAGE_LOADER_INTERNAL_ID, null, this);
     }
 }

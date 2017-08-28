@@ -3,8 +3,8 @@ package com.example.android.myalbum.presenter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
+import com.example.android.myalbum.Interface.IAlbumModel;
 import com.example.android.myalbum.Interface.IAlbumPresenter;
 import com.example.android.myalbum.Interface.IAlbumView;
 import com.example.android.myalbum.activity.ImageBrowserView;
@@ -24,22 +24,20 @@ import rx.schedulers.Schedulers;
  */
 
 public class ImageBrowserPresenter implements IAlbumPresenter {
-    private static final String TAG = "ImageBrowserPresenter";
 
     private IAlbumView mAlbumView;
-    private List<String> mImagePathList;
+//    private IAlbumModel mAlbumModel;
 
     public ImageBrowserPresenter(IAlbumView albumView) {
         this.mAlbumView = albumView;
-        mImagePathList = new ArrayList<>();
     }
 
     private void updateUIViaLoaderManager() {
         ImageDataSource dataSource = new ImageDataSource(ImageBrowserView.getLoderManager(), ImageBrowserView.getAppContext());
+        dataSource.loadAlbumFromLocal();
         dataSource.setListener(new FetchDataListener() {
             @Override
             public void fetchDataSourceSuccess(List<String> list) {
-                Log.d(TAG, "fetchDataSourceSuccess: " + list.size());
                 mAlbumView.addPictures(list);
             }
         });
@@ -50,6 +48,8 @@ public class ImageBrowserPresenter implements IAlbumPresenter {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.Media.INTERNAL_CONTENT_URI
         };
+
+        final List<String> imagePathList = new ArrayList<>();
 
         Observable.from(imageUris)
                 .subscribeOn(Schedulers.io())
@@ -72,7 +72,7 @@ public class ImageBrowserPresenter implements IAlbumPresenter {
                 .subscribe(new Subscriber<List<String>>() {
                     @Override
                     public void onCompleted() {
-                        mAlbumView.addPictures(mImagePathList);
+                        mAlbumView.addPictures(imagePathList);
                     }
 
                     @Override
@@ -81,11 +81,12 @@ public class ImageBrowserPresenter implements IAlbumPresenter {
 
                     @Override
                     public void onNext(List<String> list) {
-                        mImagePathList.addAll(list);
+                        imagePathList.addAll(list);
                     }
                 });
     }
 
+    // IAlbumPresenter
     @Override
     public void loadAlbum() {
 

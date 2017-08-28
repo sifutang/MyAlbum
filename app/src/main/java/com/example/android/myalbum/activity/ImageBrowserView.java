@@ -33,23 +33,18 @@ import java.util.List;
  * Created by android on 17-8-17.
  */
 
-public class ImageBrowserView extends AppCompatActivity
-        implements IAlbumView {
-
+public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 0;
 
-    private static final String TAG = "ImageBrowserView";
     private static final String SELECTED_IMAGES_KEY = "selected_images";
     private static Context sContext;
     private static LoaderManager sLoaderManager;
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
-
     private List<String> mDatas;
     private ArrayList<String> mSelectedDatas;
     private List<View> mSelectedViews;
-
     private IAlbumPresenter mPresenter;
 
     public static Context getAppContext() {
@@ -64,10 +59,7 @@ public class ImageBrowserView extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_browser);
-
         checkReadExternalStoragePermission();
-
-        configRecyclerView();
 
         sContext = getApplicationContext();
         sLoaderManager = getSupportLoaderManager();
@@ -75,15 +67,11 @@ public class ImageBrowserView extends AppCompatActivity
         mDatas = new ArrayList<>();
         mSelectedViews = new ArrayList<>();
         mSelectedDatas = new ArrayList<>();
+
+        configRecyclerView();
+
         mPresenter = new ImageBrowserPresenter(this);
-
         mPresenter.loadAlbum();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     private void checkReadExternalStoragePermission() {
@@ -152,7 +140,6 @@ public class ImageBrowserView extends AppCompatActivity
     // IAlbum interface
     @Override
     public void addPictures(List<String> pictures) {
-
         mDatas.addAll(pictures);
         mAdapter.setDatas(mDatas);
         mAdapter.notifyDataSetChanged();
