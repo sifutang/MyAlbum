@@ -26,72 +26,37 @@ import rx.schedulers.Schedulers;
 public class ImageBrowserPresenter implements IAlbumPresenter {
 
     private IAlbumView mAlbumView;
-//    private IAlbumModel mAlbumModel;
+    private IAlbumModel mAlbumModel;
 
     public ImageBrowserPresenter(IAlbumView albumView) {
         this.mAlbumView = albumView;
     }
 
-    private void updateUIViaLoaderManager() {
-        ImageDataSource dataSource = new ImageDataSource(ImageBrowserView.getLoderManager(), ImageBrowserView.getAppContext());
-        dataSource.loadAlbumFromLocal();
-        dataSource.setListener(new FetchDataListener() {
-            @Override
-            public void fetchDataSourceSuccess(List<String> list) {
-                mAlbumView.addPictures(list);
-            }
-        });
-    }
-
-    private void updateUIViaRxjava() {
-        Uri[] imageUris = {
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI
-        };
-
-        final List<String> imagePathList = new ArrayList<>();
-
-        Observable.from(imageUris)
-                .subscribeOn(Schedulers.io())
-                .map(new Func1<Uri, List<String>>() {
-                    @Override
-                    public List<String> call(Uri uri) {
-                        List<String> imagePathList = new ArrayList<>();
-                        Cursor cursor = MediaStore.Images.Media.query(
-                                ImageBrowserView.getAppContext().getContentResolver(),
-                                uri,
-                                new String[] { MediaStore.Images.Media.DATA });
-                        cursor.moveToFirst();
-                        while (cursor.moveToNext()) {
-                            String imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                            imagePathList.add(imagePath);
-                        }
-                        return imagePathList;
-                    }
-                })
-                .subscribe(new Subscriber<List<String>>() {
-                    @Override
-                    public void onCompleted() {
-                        mAlbumView.addPictures(imagePathList);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(List<String> list) {
-                        imagePathList.addAll(list);
-                    }
-                });
-    }
-
     // IAlbumPresenter
     @Override
     public void loadAlbum() {
+        updateUIViaRxjava();
+    }
 
-//        updateUIViaRxjava();
+    private void updateUIViaRxjava() {
+        final List<String> imagePathList = new ArrayList<>();
 
-        updateUIViaLoaderManager();
+        mAlbumModel= new ImageDataSource();
+        Observable<List<String>> observable = mAlbumModel.loadAlbum();
+        observable.subscribe(new Subscriber<List<String>>() {
+            @Override
+            public void onCompleted() {
+                mAlbumView.addPictures(imagePathList);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(List<String> list) {
+                imagePathList.addAll(list);
+            }
+        });
     }
 }
