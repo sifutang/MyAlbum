@@ -13,5 +13,5 @@ public interface IAlbumView {
 
     void selectImages(ArrayList<String> selectPictures);
 
-    void cancle();
+    void cancel();
 }

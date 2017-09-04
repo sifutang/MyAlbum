@@ -1,7 +1,6 @@
 package com.example.android.myalbum.util.ImageLoader;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.android.myalbum.util.ImageHelper;
@@ -46,7 +45,6 @@ public final class ImageLoader {
         final Bitmap bitmap = mImageCache.get(url);
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
-            Log.d(TAG, "displayImage: ");
             return;
         }
 
@@ -58,10 +56,14 @@ public final class ImageLoader {
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
-                Bitmap bitmap = pullImage(url);
+                final Bitmap bitmap = pullImage(url);
                 if (imageView.getTag().equals(url)) {
-                    Log.d(TAG, "run: submitLoadRequest");
-                    imageView.setImageBitmap(bitmap);
+                    imageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
                 }
 
                 mImageCache.put(url, bitmap);
@@ -69,10 +71,7 @@ public final class ImageLoader {
         });
     }
 
-    // TODO: 17-8-17 需要重构, 从磁盘加载或者网络下载
     private Bitmap pullImage(String url) {
-//        return  ImageHelper.getThumbnail(url, 100, 100);
-//        return  ImageHelper.createImageThumbnail(url);
          return ImageHelper.getImageThumbnail(url, 100, 100);
     }
 }

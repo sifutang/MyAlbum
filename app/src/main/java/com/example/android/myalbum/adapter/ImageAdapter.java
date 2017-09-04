@@ -24,6 +24,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     private static final String TAG = "ImageAdapter";
 
+    private static final int ITEM_COLOR_STATE_NORMAL = Color.parseColor("#F5F5F5");
     private LayoutInflater mInflater;
     private List<String> mDatas;
     private OnRecyclerViewItemListener mOnRecyclerViewItemListener;
@@ -58,7 +59,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageLoader.getInstance().displayImage(mDatas.get(position), holder.imageView);
-        holder.itemView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        holder.itemView.setBackgroundColor(ITEM_COLOR_STATE_NORMAL);
     }
 
     @Override

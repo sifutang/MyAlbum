@@ -35,10 +35,10 @@ public class ImageBrowserPresenter implements IAlbumPresenter {
     // IAlbumPresenter
     @Override
     public void loadAlbum() {
-        updateUIViaRxjava();
+        updateUI();
     }
 
-    private void updateUIViaRxjava() {
+    private void updateUI() {
         final List<String> imagePathList = new ArrayList<>();
 
         mAlbumModel= new ImageDataSource();

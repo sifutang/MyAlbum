@@ -6,7 +6,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import com.example.android.myalbum.Interface.IAlbumModel;
-import com.example.android.myalbum.activity.ImageBrowserView;
+import com.example.android.myalbum.util.App;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ImageDataSource implements IAlbumModel {
     private List<String> loadAlbumCore(Uri uri) {
         List<String> imagePathList = new ArrayList<>();
         Cursor cursor = MediaStore.Images.Media.query(
-                ImageBrowserView.getAppContext().getContentResolver(),
+                App.getAppContext().getContentResolver(),
                 uri,
                 new String[] { MediaStore.Images.Media.DATA });
         cursor.moveToFirst();

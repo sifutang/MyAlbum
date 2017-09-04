@@ -37,9 +37,6 @@ public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 0;
 
     private static final String SELECTED_IMAGES_KEY = "selected_images";
-    private static Context sContext;
-    private static LoaderManager sLoaderManager;
-
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
     private List<String> mDatas;
@@ -47,22 +44,11 @@ public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
     private List<View> mSelectedViews;
     private IAlbumPresenter mPresenter;
 
-    public static Context getAppContext() {
-        return sContext;
-    }
-
-    public static LoaderManager getLoderManager() {
-        return sLoaderManager;
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_browser);
         checkReadExternalStoragePermission();
-
-        sContext = getApplicationContext();
-        sLoaderManager = getSupportLoaderManager();
 
         mDatas = new ArrayList<>();
         mSelectedViews = new ArrayList<>();
@@ -102,7 +88,7 @@ public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
                 selectImages(mSelectedDatas);
                 break;
             case R.id.cancel:
-                cancle();
+                cancel();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -156,7 +142,7 @@ public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
     }
 
     @Override
-    public void cancle() {
+    public void cancel() {
         mSelectedDatas.clear();
         for (View view : mSelectedViews) {
             view.setBackgroundColor(Color.parseColor("#F5F5F5"));
