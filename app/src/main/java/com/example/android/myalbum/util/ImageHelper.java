@@ -46,12 +46,13 @@ public class ImageHelper {
         int scaleHeight = originHeight / height;
 
         int scale = scaleWidth < scaleHeight ? scaleWidth : scaleHeight;
-        if (scale <= 0) {
+        if (scale <= 1) {
             scale = 1;
         }
 
         options.inSampleSize = scale;
         options.inJustDecodeBounds = false;
+
         Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
         bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 

@@ -3,15 +3,13 @@ package com.example.android.myalbum.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android.myalbum.util.ImageLoader.ImageLoader;
-import com.example.android.myalbum.util.OnRecyclerViewItemListener;
+import com.example.android.myalbum.Interface.OnRecyclerViewItemListener;
 import com.example.android.myalbum.R;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.example.android.myalbum.activity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -10,20 +9,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.LoaderManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.android.myalbum.Interface.IAlbumPresenter;
 import com.example.android.myalbum.Interface.IAlbumView;
 import com.example.android.myalbum.adapter.ImageAdapter;
+import com.example.android.myalbum.model.ImageDataSource;
 import com.example.android.myalbum.presenter.ImageBrowserPresenter;
 import com.example.android.myalbum.R;
-import com.example.android.myalbum.util.OnRecyclerViewItemListener;
+import com.example.android.myalbum.Interface.OnRecyclerViewItemListener;
 import com.example.android.myalbum.util.ScreenSizeHelper;
 
 import java.util.ArrayList;
@@ -33,7 +30,7 @@ import java.util.List;
  * Created by android on 17-8-17.
  */
 
-public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
+public class ImageBrowserView extends BaseActivity<IAlbumView, ImageBrowserPresenter> implements IAlbumView {
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 0;
 
     private static final String SELECTED_IMAGES_KEY = "selected_images";
@@ -42,22 +39,28 @@ public class ImageBrowserView extends AppCompatActivity implements IAlbumView {
     private List<String> mDatas;
     private ArrayList<String> mSelectedDatas;
     private List<View> mSelectedViews;
-    private IAlbumPresenter mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_browser);
-        checkReadExternalStoragePermission();
 
+        checkReadExternalStoragePermission();
+        initCollection();
+        configRecyclerView();
+
+        mPresenter.loadAlbum();
+    }
+
+    private void initCollection() {
         mDatas = new ArrayList<>();
         mSelectedViews = new ArrayList<>();
         mSelectedDatas = new ArrayList<>();
+    }
 
-        configRecyclerView();
-
-        mPresenter = new ImageBrowserPresenter(this);
-        mPresenter.loadAlbum();
+    @Override
+    protected ImageBrowserPresenter createPresenter() {
+        return new ImageBrowserPresenter(this, new ImageDataSource());
     }
 
     private void checkReadExternalStoragePermission() {
