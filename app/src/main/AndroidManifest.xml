@@ -22,7 +22,8 @@
         </activity>
 
         <activity android:name=".activity.ImageBrowserView"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:hardwareAccelerated="true">
         </activity>
 
     </application>
