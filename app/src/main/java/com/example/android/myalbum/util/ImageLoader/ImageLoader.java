@@ -26,15 +26,11 @@ public final class ImageLoader {
 
     private ImageLoader() { }
     public static ImageLoader getInstance() {
-        if (sInstance == null) {
-            synchronized (ImageLoader.class) {
-                if (sInstance == null) {
-                    sInstance = new ImageLoader();
-                }
-            }
-        }
+        return ImageLoadHolder.INSTANCE;
+    }
 
-        return sInstance;
+    private static class ImageLoadHolder {
+        private static final ImageLoader INSTANCE = new ImageLoader();
     }
 
     public void setImageCache(ImageCache cache) {
